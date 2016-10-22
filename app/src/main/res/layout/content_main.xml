@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity" >
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/large_space"
+        android:id="@+id/btnMyLocation"
+        android:src="@drawable/my_location"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSearchPlace"
+        android:layout_margin="@dimen/large_space"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/btnMyLocation"
+        android:src="@drawable/search"/>
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/btnMenu"
+            android:src="@drawable/menu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"/>
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/btnSwap"
+            android:src="@drawable/swap"
+            android:layout_alignParentRight="true"
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
+
+        <RelativeLayout
+            android:layout_toRightOf="@id/btnMenu"
+            android:layout_toLeftOf="@id/btnSwap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:padding="@dimen/normal_space"
+                android:id="@+id/layoutFrom"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/from"/>
+                <Button
+                    android:background="@color/colorPrimaryLight"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:paddingLeft="@dimen/normal_space"
+                    android:layout_marginLeft="@dimen/normal_space"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/textColorPrimary"
+                    android:id="@+id/btnFrom"
+                    android:textAllCaps="false"
+                    android:text="Chọn điểm đi"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="@dimen/normal_space"
+                android:id="@+id/layoutTo"
+                android:layout_below="@id/layoutFrom"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/to"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:id="@+id/btnTo"
+                    android:textColor="@color/textColorPrimary"
+                    android:paddingLeft="@dimen/normal_space"
+                    android:layout_marginLeft="@dimen/normal_space"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:background="@color/colorPrimaryLight"
+                    android:text="Chọn điểm đến"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

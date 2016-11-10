@@ -102,8 +102,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // ViewTreeObserver used to register listeners that can be notified of global changes in the view tree
         ViewTreeObserver viewTreeObserver = btnFrom.getViewTreeObserver();
         if(viewTreeObserver.isAlive()){
+            //Register a callback to be invoked when the global layout state or the visibility of views within the view tree changes
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {

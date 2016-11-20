@@ -27,6 +27,10 @@ public class SearchPlaceActivity extends Activity {
         btnBack = (ImageView) findViewById(R.id.btnBack);
         etChoosePlace = (SearchView) findViewById(R.id.etChoosePlace);
 
+        etChoosePlace.setIconifiedByDefault(false);
+
+        etChoosePlace.setQueryHint(getIntent().getStringExtra(MainActivity.SEARCH_KEY));
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,8 +43,8 @@ public class SearchPlaceActivity extends Activity {
             public boolean onQueryTextSubmit(String query) {
                 Intent intent = new Intent(SearchPlaceActivity.this, MainActivity.class);
                 intent.putExtra(PLACE_KEY, query);
-                setResult(PLACE_CODE, intent);
-                startActivity(intent);
+                setResult(Activity.RESULT_OK , intent);
+                finish();
                 return true;
             }
 

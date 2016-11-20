@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static final int START_PLACE_CODE = 12;
     public static final int DESTINATION_PLACE_CODE = 10;
+    public static final String SEARCH_KEY = "search";
 
     private GoogleMap mMap;
     private LatLng BachKhoa = new LatLng(21.0042788,105.8437013);
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchPlaceActivity.class);
+                intent.putExtra(SEARCH_KEY, btnFrom.getText().toString());
                 startActivityForResult(intent, START_PLACE_CODE);
             }
         });
@@ -170,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchPlaceActivity.class);
+                intent.putExtra(SEARCH_KEY, btnTo.getText().toString());
                 startActivityForResult(intent, DESTINATION_PLACE_CODE);
             }
         });

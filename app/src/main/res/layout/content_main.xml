@@ -79,6 +79,7 @@
                     android:textColor="@color/textColorPrimary"
                     android:id="@+id/btnFrom"
                     android:textAllCaps="false"
+                    android:onClick="onSearch"
                     android:text="Chọn điểm đi"/>
             </LinearLayout>
 
@@ -101,6 +102,7 @@
                     android:textColor="@color/textColorPrimary"
                     android:paddingLeft="@dimen/normal_space"
                     android:layout_marginLeft="@dimen/normal_space"
+                    android:onClick="onSearch"
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:background="@color/colorPrimaryLight"

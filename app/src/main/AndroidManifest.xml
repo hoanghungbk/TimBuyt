@@ -21,9 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".SearchPlaceActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAPlo_S_cfB_Wv0zTJuvggkPQrgM-6BS3M"/>
+            android:value="AIzaSyAA11u0I6W6etLInkTpmgYoOF2p2pzFjVw"/>
     </application>
 
 </manifest>

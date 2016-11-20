@@ -1,5 +1,6 @@
 package ngothanhson95.dev.com.timbuyt;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    public static final int START_PLACE_CODE = 12;
+    public static final int DESTINATION_PLACE_CODE = 10;
 
     private GoogleMap mMap;
     private LatLng BachKhoa = new LatLng(21.0042788,105.8437013);
@@ -154,6 +158,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        btnFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchPlaceActivity.class);
+                startActivityForResult(intent, START_PLACE_CODE);
+            }
+        });
+
+        btnTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchPlaceActivity.class);
+                startActivityForResult(intent, DESTINATION_PLACE_CODE);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode == START_PLACE_CODE){
+            if(resultCode == RESULT_OK){
+                btnFrom.setText(data.getExtras().getString(SearchPlaceActivity.PLACE_KEY));
+            }
+        } else if(requestCode == DESTINATION_PLACE_CODE){
+            if(resultCode == RESULT_OK){
+                btnTo.setText(data.getExtras().getString(SearchPlaceActivity.PLACE_KEY));
+            }
+        }
     }
 
     @Override

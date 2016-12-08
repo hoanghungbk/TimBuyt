@@ -50,8 +50,8 @@ import java.util.List;
 
 import ngothanhson95.dev.com.timbuyt.Constants;
 import ngothanhson95.dev.com.timbuyt.R;
-import ngothanhson95.dev.com.timbuyt.model.BusStopJSON;
-import ngothanhson95.dev.com.timbuyt.model.Result;
+import ngothanhson95.dev.com.timbuyt.model.bus.BusStopJSON;
+import ngothanhson95.dev.com.timbuyt.model.bus.Result;
 import ngothanhson95.dev.com.timbuyt.network.RequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private List<Result> results;
-    private List<ngothanhson95.dev.com.timbuyt.model.Location> busStopsLocation = new ArrayList<>();
+    private List<ngothanhson95.dev.com.timbuyt.model.bus.Location> busStopsLocation = new ArrayList<>();
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     private static final int ANIMATION_DURATION = 200;
     private String mLastUpdateTime;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,12 @@ public class MainActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .build();
 
+        initView();
+
+        updateValueFromBundle(savedInstanceState);
+    }
+
+    private void initView(){
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         btnMenu = (ImageView) findViewById(R.id.btnMenu);
         btnSwap = (ImageView) findViewById(R.id.btnSwap);
@@ -112,7 +120,6 @@ public class MainActivity extends AppCompatActivity
         btnTo = (Button) findViewById(R.id.btnTo);
         btnSearch = (FloatingActionButton) findViewById(R.id.btnSearchPlace);
         btnMyLocation = (FloatingActionButton) findViewById(R.id.btnMyLocation);
-
 
         //direction button is default set
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -158,16 +165,6 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    return;
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START);
-                }
-            }
-        });
 
         // ViewTreeObserver used to register listeners that can be notified of global changes in the view tree
         ViewTreeObserver viewTreeObserver = btnFrom.getViewTreeObserver();
@@ -182,103 +179,95 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
-        //swap starting point and direction point when click button swap
-        btnSwap.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (noSwap) {
-                    TranslateAnimation ta1 = new TranslateAnimation(0, 0, 0, viewHeight);
-                    ta1.setDuration(ANIMATION_DURATION);
-                    ta1.setFillAfter(true);
-                    layoutFrom.startAnimation(ta1);
-                    layoutFrom.bringToFront();
-
-                    TranslateAnimation ta2 = new TranslateAnimation(0, 0, 0, -viewHeight);
-                    ta2.setDuration(ANIMATION_DURATION);
-                    ta2.setFillAfter(true);
-                    layoutTo.startAnimation(ta2);
-                    layoutTo.bringToFront();
-
-                    noSwap = false;
-
-                } else {
-                    TranslateAnimation ta1 = new TranslateAnimation(0, 0, viewHeight, 0);
-                    ta1.setDuration(ANIMATION_DURATION);
-                    ta1.setFillAfter(true);
-                    layoutFrom.startAnimation(ta1);
-                    layoutFrom.bringToFront();
-
-                    TranslateAnimation ta2 = new TranslateAnimation(0, 0, -viewHeight, 0);
-                    ta2.setDuration(ANIMATION_DURATION);
-                    ta2.setFillAfter(true);
-                    layoutTo.startAnimation(ta2);
-                    layoutTo.bringToFront();
-
-                    noSwap = true;
-                }
-            }
-        });
-
-        btnFrom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(MainActivity.this);
-                    startActivityForResult(intent, Constants.START_PLACE_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        btnTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(MainActivity.this);
-                    startActivityForResult(intent, Constants.DESTINATION_PLACE_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        btnMyLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentLocationMarker != null) {
-                    mCurrentLocationMarker.remove();
-                }
-                if (mLastLocation != null) {
-                    LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latlng);
-                    markerOptions.title("You're here");
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                    mCurrentLocationMarker = mMap.addMarker(markerOptions);
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Loading your current location...", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-          updateValueFromBundle(savedInstanceState);
     }
 
+    public void onBtnMenuClick(View view) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            return;
+        } else {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    //swap starting point and direction point when click button swap
+    public void onBtnSwapClick(View view) {
+        if (noSwap) {
+            TranslateAnimation ta1 = new TranslateAnimation(0, 0, 0, viewHeight);
+            ta1.setDuration(ANIMATION_DURATION);
+            ta1.setFillAfter(true);
+            layoutFrom.startAnimation(ta1);
+            layoutFrom.bringToFront();
+
+            TranslateAnimation ta2 = new TranslateAnimation(0, 0, 0, -viewHeight);
+            ta2.setDuration(ANIMATION_DURATION);
+            ta2.setFillAfter(true);
+            layoutTo.startAnimation(ta2);
+            layoutTo.bringToFront();
+
+            noSwap = false;
+
+        } else {
+            TranslateAnimation ta1 = new TranslateAnimation(0, 0, viewHeight, 0);
+            ta1.setDuration(ANIMATION_DURATION);
+            ta1.setFillAfter(true);
+            layoutFrom.startAnimation(ta1);
+            layoutFrom.bringToFront();
+
+            TranslateAnimation ta2 = new TranslateAnimation(0, 0, -viewHeight, 0);
+            ta2.setDuration(ANIMATION_DURATION);
+            ta2.setFillAfter(true);
+            layoutTo.startAnimation(ta2);
+            layoutTo.bringToFront();
+
+            noSwap = true;
+        }
+    }
+
+    public void onBtnFromClick(View view) {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(MainActivity.this);
+            startActivityForResult(intent, Constants.START_PLACE_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void onBtnToClick(View view) {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(MainActivity.this);
+            startActivityForResult(intent, Constants.DESTINATION_PLACE_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onMyLocationClick(View view) {
+        if (mCurrentLocationMarker != null) {
+            mCurrentLocationMarker.remove();
+        }
+        if (mLastLocation != null) {
+            LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latlng);
+            markerOptions.title("You're here");
+            mCurrentLocationMarker = mMap.addMarker(markerOptions);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Loading your current location...", Toast.LENGTH_LONG).show();
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -339,7 +328,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Toast.makeText(this, "Connection Failed", Toast.LENGTH_LONG);
     }
 
     @Override
@@ -351,6 +340,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    //init location request, request locationupdate
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
@@ -389,6 +380,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    //load all near bus station with radius = 1000
     public void loadBusStopJson(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/")
@@ -415,7 +407,7 @@ public class MainActivity extends AppCompatActivity
     private void loadAllNearBusStation(){
         if(results!=null){
             for (Result result : results){
-                ngothanhson95.dev.com.timbuyt.model.Location location = result.getGeometry().getLocation();
+                ngothanhson95.dev.com.timbuyt.model.bus.Location location = result.getGeometry().getLocation();
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
@@ -426,6 +418,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //convert Location to String "lat, long"
     private String locationToString(Location location){
         return location.getLatitude() + "," + location.getLongitude();
     }
@@ -459,6 +452,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
+    //restore instance state
     private void updateValueFromBundle(Bundle savedInstanceState){
         if(savedInstanceState!= null){
             // Update the value of mRequestingLocationUpdates from the Bundle, and

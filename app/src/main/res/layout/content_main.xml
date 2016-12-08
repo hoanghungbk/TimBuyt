@@ -13,6 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/large_space"
         android:id="@+id/btnMyLocation"
+        android:onClick="onMyLocationClick"
         android:src="@drawable/my_location"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -43,12 +44,14 @@
             android:src="@drawable/menu"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:onClick="onBtnMenuClick"
             android:layout_alignParentLeft="true"/>
 
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/btnSwap"
             android:src="@drawable/swap"
+            android:onClick="onBtnSwapClick"
             android:layout_alignParentRight="true"
             android:layout_width="32dp"
             android:layout_height="32dp"/>
@@ -80,7 +83,7 @@
                     android:textColor="@color/textColorPrimary"
                     android:id="@+id/btnFrom"
                     android:textAllCaps="false"
-                    android:onClick="onSearch"
+                    android:onClick="onBtnFromClick"
                     android:text="Chọn điểm đi"/>
             </LinearLayout>
 
@@ -103,7 +106,7 @@
                     android:textColor="@color/textColorPrimary"
                     android:paddingLeft="@dimen/normal_space"
                     android:layout_marginLeft="@dimen/normal_space"
-                    android:onClick="onSearch"
+                    android:onClick="onBtnToClick"
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:background="@color/colorPrimaryLight"

@@ -1,4 +1,4 @@
-package ngothanhson95.dev.com.timbuyt.model;
+package ngothanhson95.dev.com.timbuyt.model.bus;
 
 import java.util.List;
 

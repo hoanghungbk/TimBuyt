@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -15,10 +16,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ngothanhson95.dev.com.timbuyt.Constants;
+import ngothanhson95.dev.com.timbuyt.AppConstants;
 import ngothanhson95.dev.com.timbuyt.R;
 import ngothanhson95.dev.com.timbuyt.model.bus.BusStopJSON;
 import ngothanhson95.dev.com.timbuyt.model.bus.Result;
@@ -73,17 +73,16 @@ public class MainActivity extends AppCompatActivity
     private boolean mRequestingLocationUpdates;
     private boolean mAddressRequested;
     public String mAddressOutput;
+    public Place origin, destination;
     private LatLng BachKhoa = new LatLng(21.0042788, 105.8437013);
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private ImageView btnMenu, btnSwap;
+    private ImageView btnMenu, btnGo;
     private FloatingActionButton btnSearch, btnMyLocation;
     private LinearLayout layoutFrom, layoutTo;
     private RelativeLayout toolHeader;
     private Button btnFrom, btnTo;
-    private boolean noSwap = true;
-    int viewHeight;
-    private static final int ANIMATION_DURATION = 200;
+    private View mapView;
     private String mLastUpdateTime;
 
 
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mapView = mapFragment.getView();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -112,14 +112,12 @@ public class MainActivity extends AppCompatActivity
     private void initView(){
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         btnMenu = (ImageView) findViewById(R.id.btnMenu);
-        btnSwap = (ImageView) findViewById(R.id.btnSwap);
+        btnGo = (ImageView) findViewById(R.id.btnGo);
         layoutFrom = (LinearLayout) findViewById(R.id.layoutFrom);
         layoutTo = (LinearLayout) findViewById(R.id.layoutTo);
         toolHeader = (RelativeLayout) findViewById(R.id.toolHeader);
         btnFrom = (Button) findViewById(R.id.btnFrom);
         btnTo = (Button) findViewById(R.id.btnTo);
-        btnSearch = (FloatingActionButton) findViewById(R.id.btnSearchPlace);
-        btnMyLocation = (FloatingActionButton) findViewById(R.id.btnMyLocation);
 
         //direction button is default set
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -165,20 +163,6 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-
-        // ViewTreeObserver used to register listeners that can be notified of global changes in the view tree
-        ViewTreeObserver viewTreeObserver = btnFrom.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            //Register a callback to be invoked when the global layout state or the visibility of views within the view tree changes
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    btnFrom.getViewTreeObserver().addOnGlobalLayoutListener(this);
-                    viewHeight = layoutFrom.getHeight();
-                    btnTo.getLayoutParams();
-                }
-            });
-        }
     }
 
     public void onBtnMenuClick(View view) {
@@ -189,37 +173,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //swap starting point and direction point when click button swap
-    public void onBtnSwapClick(View view) {
-        if (noSwap) {
-            TranslateAnimation ta1 = new TranslateAnimation(0, 0, 0, viewHeight);
-            ta1.setDuration(ANIMATION_DURATION);
-            ta1.setFillAfter(true);
-            layoutFrom.startAnimation(ta1);
-            layoutFrom.bringToFront();
-
-            TranslateAnimation ta2 = new TranslateAnimation(0, 0, 0, -viewHeight);
-            ta2.setDuration(ANIMATION_DURATION);
-            ta2.setFillAfter(true);
-            layoutTo.startAnimation(ta2);
-            layoutTo.bringToFront();
-
-            noSwap = false;
-
+    public void onBtnGoClick(View view){
+        if(origin!=null && destination!=null) {
+            Intent i = new Intent(this, RouteResultActivity.class);
+            i.putExtra(AppConstants.ORIGIN_KEY, placeToString(origin));
+            i.putExtra(AppConstants.DESTINATION_KEY, placeToString(destination));
+            i.putExtra(AppConstants.ORIGIN_NAME_KEY, origin.getName());
+            i.putExtra(AppConstants.DESTINATION_NAME_KEY, destination.getName());
+            startActivity(i);
         } else {
-            TranslateAnimation ta1 = new TranslateAnimation(0, 0, viewHeight, 0);
-            ta1.setDuration(ANIMATION_DURATION);
-            ta1.setFillAfter(true);
-            layoutFrom.startAnimation(ta1);
-            layoutFrom.bringToFront();
-
-            TranslateAnimation ta2 = new TranslateAnimation(0, 0, -viewHeight, 0);
-            ta2.setDuration(ANIMATION_DURATION);
-            ta2.setFillAfter(true);
-            layoutTo.startAnimation(ta2);
-            layoutTo.bringToFront();
-
-            noSwap = true;
+            Toast.makeText(this, "Dữ liệu còn thiếu", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -228,7 +191,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .build(MainActivity.this);
-            startActivityForResult(intent, Constants.START_PLACE_CODE);
+            startActivityForResult(intent, AppConstants.START_PLACE_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
@@ -242,7 +205,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .build(MainActivity.this);
-            startActivityForResult(intent, Constants.DESTINATION_PLACE_CODE);
+            startActivityForResult(intent, AppConstants.DESTINATION_PLACE_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
@@ -250,49 +213,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onMyLocationClick(View view) {
-        if (mCurrentLocationMarker != null) {
-            mCurrentLocationMarker.remove();
-        }
-        if (mLastLocation != null) {
-            LatLng latlng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latlng);
-            markerOptions.title("You're here");
-            mCurrentLocationMarker = mMap.addMarker(markerOptions);
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-        } else {
-            Toast.makeText(getApplicationContext(), "Loading your current location...", Toast.LENGTH_LONG).show();
-        }
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.START_PLACE_CODE) {
+        if (requestCode == AppConstants.START_PLACE_CODE) {
             // get name of start point and mark it on Map
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                btnFrom.setText(place.getName().toString());
+                origin = PlaceAutocomplete.getPlace(this, data);
+                btnFrom.setText(origin.getName().toString());
                 mMap.addMarker(new MarkerOptions()
-                        .position(place.getLatLng())
-                        .title(place.getAddress().toString()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                        .position(origin.getLatLng())
+                        .title(origin.getAddress().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(origin.getLatLng()));
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Toast.makeText(this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == Constants.DESTINATION_PLACE_CODE) {
+        } else if (requestCode == AppConstants.DESTINATION_PLACE_CODE) {
             // get name of destination point and mark it on Map
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                btnTo.setText(place.getName().toString());
+                destination = PlaceAutocomplete.getPlace(this, data);
+
+                btnTo.setText(destination.getName().toString());
                 mMap.addMarker(new MarkerOptions()
-                        .position(place.getLatLng())
-                        .title(place.getAddress().toString()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                        .position(destination.getLatLng())
+                        .title(destination.getAddress().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(destination.getLatLng()));
             }
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             Status status = PlaceAutocomplete.getStatus(this, data);
@@ -315,6 +261,19 @@ public class MainActivity extends AppCompatActivity
         }
         mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(BachKhoa, 15));
+        if (mapView != null &&
+                mapView.findViewById(Integer.parseInt("1")) != null) {
+            // Get the button view
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            // and next place it, on bottom right (as Google Maps app)
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
+                    locationButton.getLayoutParams();
+            // position on right bottom
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 30, 30);
+        }
+
     }
 
     @Override
@@ -411,7 +370,7 @@ public class MainActivity extends AppCompatActivity
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 mCurrentLocationMarker = mMap.addMarker(markerOptions);
             }
 
@@ -421,6 +380,10 @@ public class MainActivity extends AppCompatActivity
     //convert Location to String "lat, long"
     private String locationToString(Location location){
         return location.getLatitude() + "," + location.getLongitude();
+    }
+
+    private String placeToString(Place place){
+        return String.valueOf(place.getLatLng().latitude) + "," + String.valueOf(place.getLatLng().longitude);
     }
 
     @Override
@@ -446,9 +409,9 @@ public class MainActivity extends AppCompatActivity
     //save the instance state
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(Constants.REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates );
-        outState.putParcelable(Constants.LOCATION_KEY, mLastLocation);
-        outState.putString(Constants.LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
+        outState.putBoolean(AppConstants.REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates );
+        outState.putParcelable(AppConstants.LOCATION_KEY, mLastLocation);
+        outState.putString(AppConstants.LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
         super.onSaveInstanceState(outState);
     }
 
@@ -458,14 +421,14 @@ public class MainActivity extends AppCompatActivity
             // Update the value of mRequestingLocationUpdates from the Bundle, and
             // make sure that the Start Updates and Stop Updates buttons are
             // correctly enabled or disabled.
-            if(savedInstanceState.keySet().contains(Constants.REQUESTING_LOCATION_UPDATES_KEY)){
-                mRequestingLocationUpdates = savedInstanceState.getBoolean(Constants.REQUESTING_LOCATION_UPDATES_KEY);
+            if(savedInstanceState.keySet().contains(AppConstants.REQUESTING_LOCATION_UPDATES_KEY)){
+                mRequestingLocationUpdates = savedInstanceState.getBoolean(AppConstants.REQUESTING_LOCATION_UPDATES_KEY);
             }
-            if(savedInstanceState.keySet().contains(Constants.LOCATION_KEY)){
-                mLastLocation = savedInstanceState.getParcelable(Constants.LOCATION_KEY);
+            if(savedInstanceState.keySet().contains(AppConstants.LOCATION_KEY)){
+                mLastLocation = savedInstanceState.getParcelable(AppConstants.LOCATION_KEY);
             }
-            if (savedInstanceState.keySet().contains(Constants.LAST_UPDATED_TIME_STRING_KEY)){
-                mLastUpdateTime = savedInstanceState.getString(Constants.LAST_UPDATED_TIME_STRING_KEY);
+            if (savedInstanceState.keySet().contains(AppConstants.LAST_UPDATED_TIME_STRING_KEY)){
+                mLastUpdateTime = savedInstanceState.getString(AppConstants.LAST_UPDATED_TIME_STRING_KEY);
             }
         }
     }
@@ -476,4 +439,5 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
+    
 }

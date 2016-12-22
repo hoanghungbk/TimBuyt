@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/toolHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/colorPrimary"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/btnBefore"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/before"
+            android:onClick="onBtnBeforeClick"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/btnBefore">
+
+            <LinearLayout
+                android:id="@+id/layoutFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/normal_space">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/from" />
+
+                <Button
+                    android:id="@+id/btnOrigin"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="@dimen/normal_space"
+                    android:background="@color/colorPrimaryLight"
+                    android:paddingLeft="@dimen/normal_space"
+                    android:text="Chọn điểm đi"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/textColorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutFrom"
+                android:orientation="horizontal"
+                android:padding="@dimen/normal_space">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/to" />
+
+                <Button
+                    android:id="@+id/btnDestination"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="@dimen/normal_space"
+                    android:background="@color/colorPrimaryLight"
+                    android:paddingLeft="@dimen/normal_space"
+                    android:text="Chọn điểm đến"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/textColorPrimary" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabsRouteResult"
+        app:tabMode="fixed"
+        android:background="@color/colorPrimaryDark"
+        app:tabTextColor="@color/textColorPrimary"
+        app:tabGravity="fill">
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpRouResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+</LinearLayout>

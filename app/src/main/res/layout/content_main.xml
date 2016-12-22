@@ -5,26 +5,6 @@
                 android:layout_height="match_parent"
                 tools:context=".ui.MainActivity" >
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/large_space"
-        android:id="@+id/btnMyLocation"
-        android:onClick="onMyLocationClick"
-        android:src="@drawable/my_location"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSearchPlace"
-        android:layout_margin="@dimen/large_space"
-        android:layout_alignParentRight="true"
-        android:layout_above="@id/btnMyLocation"
-        android:src="@drawable/search"/>
-
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -49,16 +29,16 @@
 
         <ImageView
             android:layout_centerVertical="true"
-            android:id="@+id/btnSwap"
-            android:src="@drawable/swap"
-            android:onClick="onBtnSwapClick"
+            android:id="@+id/btnGo"
+            android:src="@drawable/ic_navigate_next_white"
+            android:onClick="onBtnGoClick"
             android:layout_alignParentRight="true"
             android:layout_width="32dp"
             android:layout_height="32dp"/>
 
         <RelativeLayout
             android:layout_toRightOf="@id/btnMenu"
-            android:layout_toLeftOf="@id/btnSwap"
+            android:layout_toLeftOf="@id/btnGo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

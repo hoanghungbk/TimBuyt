@@ -17,7 +17,7 @@ public interface RequestInterface {
     @GET("maps/api/place/nearbysearch/json?radius=1000&sensor=false&type=bus_station&key=" + AppConstants.DEVELOPER_KEY)
     Call<BusStopJSON> getAllBusStop(@Query("location") String location);
 
-    @GET("maps/api/directions/json?mode=transit&transit_mode=bus&sensor=false&alternatives=true&key=" + AppConstants.DEVELOPER_KEY)
+    @GET("maps/api/directions/json?mode=transit&transit_mode=bus&sensor=false&alternatives=true&language=vi&key=" + AppConstants.DEVELOPER_KEY)
     Call<DirectionJSON> getAllRoute(@Query("origin")String origin, @Query("destination") String dest);
 
 }

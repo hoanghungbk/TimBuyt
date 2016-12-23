@@ -18,7 +18,7 @@ import ngothanhson95.dev.com.timbuyt.model.direction.Step;
 
 public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
 
-    TextView tvDistance, tvWalking, tvBusChange;
+    TextView tvDistance, tvWalking, tvBusChange, tvTimeDuration, tvCost;
     ImageView img0, img1, img2, img3, img4, img5, img6, img7, img8;
     int busChange = 0, distanceWalking =0;
 
@@ -27,6 +27,9 @@ public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
         tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
         tvBusChange = (TextView) itemView.findViewById(R.id.tvBusChange);
         tvWalking = (TextView) itemView.findViewById(R.id.tvWalking);
+        tvTimeDuration = (TextView) itemView.findViewById(R.id.tvTimeDuration);
+        tvCost = (TextView) itemView.findViewById(R.id.tvCost);
+
         img0 = (ImageView) itemView.findViewById(R.id.img0);
         img1 = (ImageView) itemView.findViewById(R.id.img1);
         img2 = (ImageView) itemView.findViewById(R.id.img2);
@@ -41,6 +44,8 @@ public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
     public void setupWith(Route route){
         if(route!=null) {
             tvDistance.setText(route.legs.get(0).distance.text);
+            tvTimeDuration.setText(route.getLegs().get(0).duration.text);
+            tvCost.setText(route.getFare().value);
 
             List<Step> steps = route.legs.get(0).getSteps();
 

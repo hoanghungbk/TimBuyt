@@ -64,7 +64,7 @@
                     android:id="@+id/btnFrom"
                     android:textAllCaps="false"
                     android:onClick="onBtnFromClick"
-                    android:text="Chọn điểm đi"/>
+                    android:text="Vị trí của bạn"/>
             </LinearLayout>
 
             <LinearLayout

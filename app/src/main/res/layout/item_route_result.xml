@@ -1,56 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/normal_space">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="40dp"
         android:background="@color/colorPrimaryLight"
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/img0"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_navigate_next_white"
             android:id="@+id/img1"
             android:visibility="gone"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/img2"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_navigate_next_white"
             android:id="@+id/img3"
             android:visibility="gone"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/img4"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_navigate_next_white"
             android:id="@+id/img5"
             android:visibility="gone"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/img6"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_navigate_next_white"
             android:id="@+id/img7"
             android:visibility="gone"/>
         <ImageView
+            android:layout_gravity="center"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/img8"/>
@@ -88,6 +98,24 @@
                 android:id="@+id/tvBusChange"
                 android:text="1" />
         </TableRow>
+        <TableRow>
+
+            <TextView android:text="Thời gian dự tính: " />
+
+            <TextView
+                android:id="@+id/tvTimeDuration"
+                android:text="1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:text="Giá tiền (VNĐ): " />
+
+            <TextView
+                android:id="@+id/tvCost"
+                android:text="1" />
+        </TableRow>
+
     </TableLayout>
 
 </LinearLayout>

@@ -174,15 +174,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBtnGoClick(View view){
-        if(origin!=null && destination!=null) {
-            Intent i = new Intent(this, RouteResultActivity.class);
-            i.putExtra(AppConstants.ORIGIN_KEY, placeToString(origin));
+        Intent i = new Intent(this, RouteResultActivity.class);
+        if(destination!=null) {
+            if(origin==null){
+                i.putExtra(AppConstants.ORIGIN_KEY, locationToString(mLastLocation));
+            } else {
+                i.putExtra(AppConstants.ORIGIN_KEY, placeToString(origin));
+            }
             i.putExtra(AppConstants.DESTINATION_KEY, placeToString(destination));
-            i.putExtra(AppConstants.ORIGIN_NAME_KEY, origin.getName());
-            i.putExtra(AppConstants.DESTINATION_NAME_KEY, destination.getName());
+            i.putExtra(AppConstants.ORIGIN_NAME_KEY, btnFrom.getText());
+            i.putExtra(AppConstants.DESTINATION_NAME_KEY, btnTo.getText());
             startActivity(i);
         } else {
-            Toast.makeText(this, "Dữ liệu còn thiếu", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Nhập địa điểm bạn muốn đến", Toast.LENGTH_LONG).show();
         }
     }
 

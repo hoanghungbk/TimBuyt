@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolHeader"
+        android:layout_margin="8dp"
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        >
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/btn_before"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src ="@drawable/before"
+            android:onClick="onBtnBeforeClick1"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnCrawl"
+            android:onClick="onBtnCrawl"
+            android:text="Crawl"
+            android:layout_toRightOf="@id/btn_before"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnShow"
+            android:layout_gravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:text="Showwd data"
+            android:onClick="onBtnShow"/>
+
+
+    </RelativeLayout>
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabsHelpResult"
+        app:tabMode="fixed"
+        android:background="@color/colorPrimaryDark"
+        app:tabTextColor="@color/textColorPrimary"
+        app:tabGravity="fill">
+    </android.support.design.widget.TabLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:weightSum="1">
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/listView">
+        </ListView>
+
+    </LinearLayout>
+
+</LinearLayout>

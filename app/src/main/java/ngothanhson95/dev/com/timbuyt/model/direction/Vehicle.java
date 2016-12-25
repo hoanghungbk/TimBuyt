@@ -1,6 +1,8 @@
 package ngothanhson95.dev.com.timbuyt.model.direction;
 
-public class Vehicle {
+import java.io.Serializable;
+
+public class Vehicle implements Serializable{
 
     public String icon;
     public String name;

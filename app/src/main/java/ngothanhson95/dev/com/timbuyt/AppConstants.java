@@ -29,4 +29,7 @@ public final class AppConstants {
     public static final String DESTINATION_NAME_KEY = "destination_name";
     public static final String ORIGIN_NAME_KEY = "origin_name";
     public static final String PARCELABLE_ROUTE_KEY = "parcelablekey";
+
+    public static final String ROUT_KEY = "route";
+    public static final String BUS_KEY = "bus";
 }

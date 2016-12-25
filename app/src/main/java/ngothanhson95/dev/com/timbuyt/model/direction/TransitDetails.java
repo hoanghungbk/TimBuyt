@@ -2,10 +2,12 @@ package ngothanhson95.dev.com.timbuyt.model.direction;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by ngothanhson on 12/8/16.
  */
-public class TransitDetails {
+public class TransitDetails implements Serializable {
 
 
     @SerializedName("arrival_stop")

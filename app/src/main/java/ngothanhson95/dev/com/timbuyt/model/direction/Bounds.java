@@ -1,6 +1,8 @@
 package ngothanhson95.dev.com.timbuyt.model.direction;
 
-public class Bounds {
+import java.io.Serializable;
+
+public class Bounds implements Serializable{
 
     public Northeast northeast;
     public Southwest southwest;

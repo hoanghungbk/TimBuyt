@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.RouteResultActivity" />
+        <activity android:name=".ui.BusResultActivity"/>
+        <activity android:name=".ui.BusInfoActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAA11u0I6W6etLInkTpmgYoOF2p2pzFjVw"/>

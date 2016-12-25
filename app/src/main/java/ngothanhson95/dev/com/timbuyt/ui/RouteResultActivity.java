@@ -1,5 +1,6 @@
 package ngothanhson95.dev.com.timbuyt.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -40,6 +41,7 @@ public class RouteResultActivity extends AppCompatActivity {
     String origin, destination;
     String originName, destinationName;
     ArrayList<Route> routes;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +60,10 @@ public class RouteResultActivity extends AppCompatActivity {
         btnOrigin.setText(originName);
         btnDestination.setText(destinationName);
 
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Đang tải dữ liệu");
+        progressDialog.show();
         loadRouteJson();
     }
 
@@ -87,8 +93,10 @@ public class RouteResultActivity extends AppCompatActivity {
                     adapter.addFragment(lessChangeBusFragment, "Chuyển tuyến ít nhất");
                     adapter.addFragment(lessWalkingFragment, "Đi bộ ít nhất");
 
+                    progressDialog.dismiss();
+
                     Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList(AppConstants.PARCELABLE_ROUTE_KEY, routes);
+                    bundle.putSerializable(AppConstants.PARCELABLE_ROUTE_KEY, routes);
                     bestRouteFragment.setArguments(bundle);
                     lessWalkingFragment.setArguments(bundle);
                     lessChangeBusFragment.setArguments(bundle);
@@ -99,6 +107,8 @@ public class RouteResultActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<DirectionJSON> call, Throwable t) {
                 }
+
+
             });
         }
 }

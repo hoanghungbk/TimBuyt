@@ -1,11 +1,12 @@
 package ngothanhson95.dev.com.timbuyt.model.direction;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ngothanhson on 12/8/16.
  */
-public class Leg {
+public class Leg implements Serializable {
 
     public ArrivalTime arrivalTime;
     public DepartureTime departureTime;

@@ -4,4 +4,6 @@
     <dimen name="large_space">16dp</dimen>
     <dimen name="nav_header">160dp</dimen>
     <dimen name="huge_space">24dp</dimen>
+    <dimen name="title_text">24dp</dimen>
+    <dimen name="subtitle">16dp</dimen>
 </resources>

@@ -3,11 +3,13 @@ package ngothanhson95.dev.com.timbuyt.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -16,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -43,15 +44,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import ngothanhson95.dev.com.timbuyt.AppConstants;
 import ngothanhson95.dev.com.timbuyt.R;
 import ngothanhson95.dev.com.timbuyt.model.bus.BusStopJSON;
 import ngothanhson95.dev.com.timbuyt.model.bus.Result;
+import ngothanhson95.dev.com.timbuyt.model.direction.Route;
+import ngothanhson95.dev.com.timbuyt.model.direction.Step;
 import ngothanhson95.dev.com.timbuyt.network.RequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,7 +79,6 @@ public class MainActivity extends AppCompatActivity
     private boolean mAddressRequested;
     public String mAddressOutput;
     public Place origin, destination;
-    private LatLng BachKhoa = new LatLng(21.0042788, 105.8437013);
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private ImageView btnMenu, btnGo;
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity
     private Button btnFrom, btnTo;
     private View mapView;
     private String mLastUpdateTime;
+    private Bitmap smallMarker;
 
 
 
@@ -118,6 +123,11 @@ public class MainActivity extends AppCompatActivity
         toolHeader = (RelativeLayout) findViewById(R.id.toolHeader);
         btnFrom = (Button) findViewById(R.id.btnFrom);
         btnTo = (Button) findViewById(R.id.btnTo);
+        toolHeader = (RelativeLayout) findViewById(R.id.toolHeader);
+
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.bus_hanoi);
+        Bitmap b=bitmapdraw.getBitmap();
+        smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
 
         //direction button is default set
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -129,14 +139,15 @@ public class MainActivity extends AppCompatActivity
                 int id = item.getItemId();
 
                 if (id == R.id.nav_direction) {
-
+                    mMap.clear();
                 } else if (id == R.id.nav_bus_stop) {
                     if(mLastLocation!=null){
                         loadBusStopJson();
                         loadAllNearBusStation();
                     }
                 } else if (id == R.id.nav_search) {
-
+                    Intent intent = new Intent(MainActivity.this, BusResultActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_person) {
 
                 } else if (id == R.id.nav_help) {
@@ -253,6 +264,43 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //icon marker
+
+        // get route serializable from route result aactivity
+        Bundle bundle = new Bundle();
+        bundle = getIntent().getBundleExtra(AppConstants.ROUT_KEY);
+        if(bundle!=null){
+            List<LatLng> listLatLng = new ArrayList<>();
+            toolHeader.setVisibility(View.INVISIBLE);
+            Route route = (Route) bundle.getSerializable(AppConstants.ROUT_KEY);
+            List<Step> steps = route.getLegs().get(0).getSteps();
+            for(int i = 0; i< route.getLegs().get(0).getSteps().size(); i++){
+                String polyline = "";
+                PolylineOptions polylineOptions = new PolylineOptions();
+                polyline = steps.get(i).getPolyline().getPoints();
+                listLatLng = decodePoly(polyline);
+                polylineOptions.addAll(listLatLng);
+                polylineOptions.width(10);
+
+                if(steps.get(i).getTravelMode().contains("WALKING")) {
+                    polylineOptions.color(Color.GREEN);
+                } else {
+                    polylineOptions.color(Color.RED);
+                    String busNumber = steps.get(i).getTransitDetails().line.name;
+
+                    Marker arrive = mMap.addMarker(new MarkerOptions()
+                            .position(listLatLng.get(0))
+                            .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                            .title("Bắt xe: ")
+                            .snippet(busNumber));
+                    arrive.showInfoWindow();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arrive.getPosition(), 13));
+                }
+                mMap.addPolyline(polylineOptions);
+            }
+
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -264,7 +312,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(BachKhoa, 15));
+
         if (mapView != null &&
                 mapView.findViewById(Integer.parseInt("1")) != null) {
             // Get the button view
@@ -374,7 +422,7 @@ public class MainActivity extends AppCompatActivity
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                 mCurrentLocationMarker = mMap.addMarker(markerOptions);
             }
 
@@ -410,6 +458,38 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private List<LatLng> decodePoly(String encoded){
+        List<LatLng> poly = new ArrayList<>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while(index<len){
+            int b, shift =0, result =0 ;
+            do{
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+        return poly;
+    }
+
     //save the instance state
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -443,5 +523,5 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-    
+
 }

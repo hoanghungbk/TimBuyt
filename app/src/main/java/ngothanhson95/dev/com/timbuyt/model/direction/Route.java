@@ -3,18 +3,23 @@ package ngothanhson95.dev.com.timbuyt.model.direction;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ngothanhson on 12/8/16.
  */
-public class Route implements Parcelable {
+
+public class Route implements Serializable{
 
     public Bounds bounds;
     public String copyrights;
     public Fare fare;
     public List<Leg> legs = null;
     public OverviewPolyline overviewPolyline;
+    public String summary;
+    public List<String> warnings = null;
+    public List<Object> waypointOrder = null;
 
     public Bounds getBounds() {
         return bounds;
@@ -78,44 +83,5 @@ public class Route implements Parcelable {
 
     public void setWaypointOrder(List<Object> waypointOrder) {
         this.waypointOrder = waypointOrder;
-    }
-
-    public static Creator<Route> getCREATOR() {
-        return CREATOR;
-    }
-
-    public String summary;
-    public List<String> warnings = null;
-    public List<Object> waypointOrder = null;
-
-
-    protected Route(Parcel in) {
-        copyrights = in.readString();
-        summary = in.readString();
-        warnings = in.createStringArrayList();
-    }
-
-    public static final Creator<Route> CREATOR = new Creator<Route>() {
-        @Override
-        public Route createFromParcel(Parcel in) {
-            return new Route(in);
-        }
-
-        @Override
-        public Route[] newArray(int size) {
-            return new Route[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(copyrights);
-        parcel.writeString(summary);
-        parcel.writeStringList(warnings);
     }
 }

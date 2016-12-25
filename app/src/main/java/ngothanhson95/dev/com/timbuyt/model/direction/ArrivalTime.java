@@ -1,6 +1,8 @@
 package ngothanhson95.dev.com.timbuyt.model.direction;
 
-public class ArrivalTime {
+import java.io.Serializable;
+
+public class ArrivalTime implements Serializable {
 
     public String text;
     public String timeZone;

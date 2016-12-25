@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import ngothanhson95.dev.com.timbuyt.listener.RecyclerViewClickListener;
 import ngothanhson95.dev.com.timbuyt.R;
 import ngothanhson95.dev.com.timbuyt.model.direction.Route;
 import ngothanhson95.dev.com.timbuyt.model.direction.Step;
@@ -16,19 +16,23 @@ import ngothanhson95.dev.com.timbuyt.model.direction.Step;
  * Created by sonnt on 12/21/16.
  */
 
-public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
+public class RouteResultVIewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     TextView tvDistance, tvWalking, tvBusChange, tvTimeDuration, tvCost;
     ImageView img0, img1, img2, img3, img4, img5, img6, img7, img8;
     int busChange = 0, distanceWalking =0;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public RouteResultVIewHolder(View itemView) {
+
+    public RouteResultVIewHolder(View itemView, RecyclerViewClickListener listener) {
         super(itemView);
         tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
         tvBusChange = (TextView) itemView.findViewById(R.id.tvBusChange);
         tvWalking = (TextView) itemView.findViewById(R.id.tvWalking);
         tvTimeDuration = (TextView) itemView.findViewById(R.id.tvTimeDuration);
         tvCost = (TextView) itemView.findViewById(R.id.tvCost);
+        this.recyclerViewClickListener = listener;
+        itemView.setOnClickListener(this);
 
         img0 = (ImageView) itemView.findViewById(R.id.img0);
         img1 = (ImageView) itemView.findViewById(R.id.img1);
@@ -45,7 +49,7 @@ public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
         if(route!=null) {
             tvDistance.setText(route.legs.get(0).distance.text);
             tvTimeDuration.setText(route.getLegs().get(0).duration.text);
-            tvCost.setText(route.getFare().value);
+            tvCost.setText(Integer.toString(route.getFare().value));
 
             List<Step> steps = route.legs.get(0).getSteps();
 
@@ -110,5 +114,12 @@ public class RouteResultVIewHolder extends RecyclerView.ViewHolder {
 
         }
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(recyclerViewClickListener != null){
+            recyclerViewClickListener.onItemClick(view, getPosition());
+        }
     }
 }

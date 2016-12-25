@@ -1,5 +1,6 @@
 package ngothanhson95.dev.com.timbuyt.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,16 +15,18 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import ngothanhson95.dev.com.timbuyt.AppConstants;
+import ngothanhson95.dev.com.timbuyt.listener.RecyclerViewClickListener;
 import ngothanhson95.dev.com.timbuyt.R;
 import ngothanhson95.dev.com.timbuyt.adapter.RouteResultAdapter;
 import ngothanhson95.dev.com.timbuyt.model.direction.Route;
 import ngothanhson95.dev.com.timbuyt.model.direction.Step;
+import ngothanhson95.dev.com.timbuyt.ui.MainActivity;
 
 /**
  * Created by sonnt on 12/19/16.
  */
 
-public class LessChangeBusFragment extends Fragment {
+public class LessChangeBusFragment extends Fragment implements RecyclerViewClickListener {
     RecyclerView rvLessChangeBus;
     ArrayList<Route> routes = new ArrayList<>();
     RouteResultAdapter adapter;
@@ -35,13 +38,23 @@ public class LessChangeBusFragment extends Fragment {
         rvLessChangeBus = (RecyclerView) v.findViewById(R.id.rvLessChangeBus);
         Bundle b = getArguments();
         if(b!=null){
-            routes =  b.getParcelableArrayList(AppConstants.PARCELABLE_ROUTE_KEY);
+            routes =  (ArrayList<Route>) b.getSerializable(AppConstants.PARCELABLE_ROUTE_KEY);
             Collections.sort(routes, new LessChangeBusComparator());
             adapter = new RouteResultAdapter(routes);
         }
         rvLessChangeBus.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
         rvLessChangeBus.setAdapter(adapter);
+        this.adapter.setOnItemClickListener(this);
         return v;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable(AppConstants.ROUT_KEY, routes.get(position));
+        i.putExtra(AppConstants.ROUT_KEY, b);
+        startActivity(i);
     }
 
     class LessChangeBusComparator implements Comparator<Route> {

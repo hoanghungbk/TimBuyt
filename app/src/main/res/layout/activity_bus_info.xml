@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
+
+    <TextView
+        android:id="@+id/tvBus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Name"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="@dimen/title_text"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView android:text="Tần suất: "
+                android:textStyle="bold"
+                android:textSize="@dimen/subtitle"/>
+            <TextView android:id="@+id/tvFrequency"
+                android:textColor="@android:color/holo_blue_light"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:text="Giá vé: "
+                android:textStyle="bold"
+                android:textSize="@dimen/subtitle"/>
+            <TextView android:id="@+id/tvBusCost"
+                android:textColor="@android:color/holo_blue_light"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đơn vị chủ quản: "
+                android:textStyle="bold"/>
+            <TextView android:id="@+id/tvBusiness"
+                android:textColor="@android:color/holo_blue_light"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:text="Giờ xuất/ đóng bến"
+                android:textStyle="bold"/>
+
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/tvTimeWork"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ben xe giap bat"
+        android:textColor="@android:color/holo_blue_light"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chiều đi "
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tvGoOn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ben xe giap bat"
+        android:textColor="@android:color/holo_green_light"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chiều về"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tvComeBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ben xe giap bat"
+        android:textColor="@android:color/holo_red_light"/>
+
+
+</LinearLayout>

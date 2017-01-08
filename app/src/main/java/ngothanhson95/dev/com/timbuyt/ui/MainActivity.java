@@ -287,12 +287,13 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     polylineOptions.color(Color.RED);
                     String busNumber = steps.get(i).getTransitDetails().line.name;
+                    String busStopName = steps.get(i).getTransitDetails().departureStop.name;
 
                     Marker arrive = mMap.addMarker(new MarkerOptions()
                             .position(listLatLng.get(0))
                             .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-                            .title("Bắt xe: ")
-                            .snippet(busNumber));
+                            .title("Đến: " + busStopName)
+                            .snippet("Bắt xe: " + busNumber));
                     arrive.showInfoWindow();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arrive.getPosition(), 13));
                 }

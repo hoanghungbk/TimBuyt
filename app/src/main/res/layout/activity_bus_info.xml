@@ -21,9 +21,9 @@
             <TextView android:text="Tần suất: "
                 android:textStyle="bold"
                 android:textSize="@dimen/subtitle"/>
-            <TextView android:id="@+id/tvFrequency"
-                android:textColor="@android:color/holo_blue_light"/>
         </TableRow>
+        <TextView android:id="@+id/tvFrequency"
+            android:textColor="@android:color/holo_blue_light"/>
         <TableRow>
             <TextView android:text="Giá vé: "
                 android:textStyle="bold"
@@ -44,7 +44,6 @@
             <TextView
                 android:text="Giờ xuất/ đóng bến"
                 android:textStyle="bold"/>
-
         </TableRow>
     </TableLayout>
 
